@@ -60,6 +60,7 @@
   <script>
     function removeTransition(event) {
       if (event.propertyName !== 'transform') return; // 过滤其中一种事件
+      
       event.target.classList.remove('playing'); // 移除高亮的样式
     }
 
@@ -73,7 +74,7 @@
       audio.play(); // 播放相应音效
     }
 
-    const keys = Array.from(document.querySelectorAll('.key')); // 获取页面所有按钮元素
+    const keys = document.querySelectorAll('.key'); // 获取页面所有按钮元素
     keys.forEach(key => key.addEventListener('transitionend', removeTransition)); // 添加 transition 事件监听
     window.addEventListener('keydown', playSound);
   </script>

@@ -18,7 +18,7 @@
 
   <style>
     html {
-      background:#018DED url(http://unsplash.it/1500/1000?image=881&blur=50);
+      background:#018DED url();
       background-size:cover;
       font-family:'helvetica neue';
       text-align: center;
@@ -36,7 +36,7 @@
     .clock {
       width: 30rem;
       height: 30rem;
-      border:20px solid white;
+      border:30px solid white;
       border-radius:50%;
       margin:50px auto;
       position: relative;
@@ -45,11 +45,11 @@
         0 0 0 4px rgba(0,0,0,0.1),
         inset 0 0 0 3px #EFEFEF,
         inset 0 0 10px black,
-        0 0 10px rgba(0,0,0,0.2);
+        0 0 10px 3px rgba(0,0,0,0.2);
     }
 
     .clock-face {
-      position: relative;
+      /* position: relative; */
       width: 100%;
       height: 100%;
       transform: translateY(-3px); /* account for the height of the clock hands */
@@ -57,17 +57,95 @@
 
     .hand {
       width:50%;
-      height:6px;
-      background:black;
+      background:#fff;
       position: absolute;
       top:50%;
+      right: 50%;
+      box-shadow:
+              0 0 0 .1px #fff,
+              0 0 0 1px rgba(0,0,0,0.1),
+              0 0 8px rgba(0,0,0,0.4),
+              2px 5px 1px rgba(0, 0, 0, .5);
+      transform-origin: 100% 50%;
+      transform: rotate(90deg);
+
+      transition-timing-function: cubic-bezier(0.9, 0.54, 0.26, 1.68);
     }
 
+    .clock-face:after {
+        width: 1em;
+        height: 1em;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        /*组合技，先把元素左上角移动到中心(前两行)，然后再把元素中心平移到该位置*/
+        position: absolute;
+        display: block;
+        content: '';
+        background-color: #a8c5d1;
+        border-radius: 50%;
+        box-shadow:
+                0 0 0 2px rgba(0,0,0,0.1),
+                0 0 10px rgba(0,0,0,0.2);
+        
+    }
+
+    .hour-hand {
+        width: 40%;
+        height:10px;
+        margin-top: -5px;
+        border-bottom-left-radius: .5em;
+        border-top-left-radius: .5em;
+        transition: all 3s;
+    }
+
+    .min-hand {
+        width: 45%;
+        height:5px;
+        margin-top: -2.5px;
+        transition: all .1s cubic-bezier(0.9, 0.54, 0.26, 1.68);
+    }
+
+    .second-hand {
+        height: 2px;
+        margin-top: -1px;
+        border-bottom-left-radius: 100%;
+        border-top-left-radius: 100%;
+        transition: all .05s cubic-bezier(0.9, 0.54, 0.26, 1.68);
+        background-color: red;
+    }
+    
+
   </style>
-
+  <script src = "../jquery-3.7.1.js" type = "text/javascript"></script>
   <script>
-
-
+    const $hourHand = $('.hour-hand')
+    const $mibuteHand = $('.min-hand')
+    const $secondHand = $('.second-hand')
+   
+    function updateDate(){
+      const date = new Date
+      const hours = date.getHours();    // 获取小时（0-23）
+      const minutes = date.getMinutes(); // 获取分钟（0-59）
+      const seconds = date.getSeconds(); //seconds为59时对于的进程是从58s-59s，因此下面判断条件是0
+      if(seconds === 0){
+        $secondHand.css('transition', 'all 0s cubic-bezier(0.9, 0.54, 0.26, 1.68)');
+      }
+      else{
+        $secondHand.css('transition','all .05s cubic-bezier(0.9, 0.54, 0.26, 1.68)')
+      }
+      if(minutes === 0){
+        $mibuteHand.css('transition','none')
+      }
+      else{
+        $mibuteHand.css('transition','all .05s cubic-bezier(0.9, 0.54, 0.26, 1.68)')
+      }
+      $hourHand.css('transform',`rotate(${90 + 30 * hours + 0.5 * minutes}deg)`)
+      $mibuteHand.css('transform',`rotate(${90 + 6 * minutes + 0.1 * seconds}deg)`)
+      $secondHand.css('transform',`rotate(${90 + 6 * seconds}deg)`)
+    }
+    setInterval(updateDate,1000)
+    
   </script>
 </body>
 </html>
