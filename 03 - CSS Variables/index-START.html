@@ -9,10 +9,10 @@
 
   <div class="controls">
     <label for="spacing">Spacing:</label>
-    <input type="range" name="spacing" min="10" max="200" value="10" data-sizing="px">
+    <input type="range" name="spacing" min="10" max="200" value="10" data-sizing="px" step = '0.5'>
 
     <label for="blur">Blur:</label>
-    <input type="range" name="blur" min="0" max="25" value="10" data-sizing="px">
+    <input type="range" name="blur" min="0" max="25" value="10" data-sizing="px" step = '0.1'>
 
     <label for="base">Base Color</label>
     <input type="color" name="base" value="#ffc600">
@@ -45,9 +45,35 @@
     input {
       width:100px;
     }
+    
   </style>
-
+  <script src = '../jquery-3.7.1.js' type = 'text/javascript'></script>
   <script>
+    $(document).ready(function () {
+    const $img = $('img');
+    const $inputs = $('input');
+    const $hl = $('.hl');
+
+    function updateStyles() {
+      const spacing = $('input[name="spacing"]').val();
+      const blur = $('input[name="blur"]').val();
+      const color = $('input[name="base"]').val();
+
+      $img.css({
+        'border': `${spacing}px solid ${color}`,
+        'filter': `blur(${blur}px)`
+      });
+
+      $hl.css('color', color);
+    }
+
+    // 初始样式
+    updateStyles();
+
+    // 所有 input 输入时都更新样式
+    $inputs.on('input', updateStyles);
+  });
+    
   </script>
 
 </body>
